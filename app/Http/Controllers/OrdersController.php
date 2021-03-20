@@ -69,6 +69,9 @@ class OrdersController extends Controller
         $status = $diff_qty<=0?'taken':'pending';
         Donation::where('id',$donation_id)->update(['status'=>$status]);
         Donation::where('id',$donation_id)->update(['quantity'=>$diff_qty]);
+
+        auth()->user()->notify(new NewOrderPlaced($order));
+
         
         return redirect(route('order.index'));
 
