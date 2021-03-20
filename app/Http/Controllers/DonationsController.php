@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Donation;
 use Illuminate\Http\Request;
+use App\Http\Requests\Donations\CreateDonationRequest;
+
 
 class DonationsController extends Controller
 {
@@ -14,7 +16,8 @@ class DonationsController extends Controller
      */
     public function index()
     {
-        //
+        // dd('hello');
+        return view('donations.create');
     }
 
     /**
@@ -33,11 +36,31 @@ class DonationsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateDonationRequest $request)
     {
-        //
-    }
+        // dd($request);
+        // dd($request->category[0]);
+        $image = $request->file('image')->store('donation');
+        // dd($image);
 
+        $donation = Donation::create([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'contact'=>$request->contact,
+            'city'=>$request->city,
+            'address'=>$request->address,
+            'item'=>$request->item,
+            'category'=>$request->category[0],
+            'quantity'=>$request->quantity,
+            'expiry'=>$request->expiry,
+            'comment'=>$request->comment,
+            'image'=>$image,
+            'status'=>'pending'
+        ]);
+
+        return redirect(route('order.index'));
+    }
+    
     /**
      * Display the specified resource.
      *
@@ -70,6 +93,7 @@ class DonationsController extends Controller
     public function update(Request $request, Donation $donation)
     {
         //
+        
     }
 
     /**
